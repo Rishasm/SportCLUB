@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>SportCLUB · Проверка инфраструктуры</title>
+    <link rel="stylesheet" href="/diagnostics.css">
+    <script src="/diagnostics.js" defer></script>
+</head>
+<body>
+    <header>
+        <a class="brand" href="/diagnostics.html" aria-label="SportCLUB">Sport<span>CLUB</span></a>
+        <span class="caption">Среда разработки · Этап 5</span>
+    </header>
+    <main>
+        <div class="intro">
+            <div>
+                <p class="eyebrow">Проверка инфраструктуры</p>
+                <h1>Одна точка входа.<br>Пять сервисов.</h1>
+                <p class="muted">Запросы этой страницы проходят через Gateway, обнаружение в Eureka и отдельные базы данных.</p>
+            </div>
+            <button id="refresh" type="button">Проверить подключение ↗</button>
+        </div>
+        <p id="summary" role="status" aria-live="polite">Ожидание проверки…</p>
+        <section id="services" class="grid" aria-label="Состояние сервисов"></section>
+        <aside>
+            <strong>Это техническая страница разработки.</strong>
+            <p>Здесь проверяются конфигурация, маршрутизация, базы данных и API-документация. Вход, абонементы, запись на занятия, дневник тренировок и личные показатели доступны на <a href="/">сайте SportCLUB</a>.</p>
+        </aside>
+    </main>
+    <footer>SportCLUB · Акцент #B5FF7A · Карточки 24 px</footer>
+</body>
+</html>
+

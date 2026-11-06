@@ -1,0 +1,51 @@
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+spring:
+  cloud:
+    config:
+      fail-fast: true
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
+    registry-fetch-interval-seconds: 5
+    initial-instance-info-replication-interval-seconds: 5
+  instance:
+    hostname: ${SERVICE_HOSTNAME:localhost}
+    prefer-ip-address: false
+    instance-id: ${spring.application.name}:${server.port}
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 15
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+info:
+  app:
+    name: ${spring.application.name}
+    project: SportCLUB
+    stage: personal-wellness
+sportclub:
+  security:
+    jwt-secret: ${JWT_SECRET:sportclub-local-development-key-change-before-deploy-2026}
+  configuration-source: config-server
+  brand:
+    name: SportCLUB
+    accent: "#B5FF7A"
+    club-color: "#B5FF7A"
+    card-radius: 24
+logging:
+  pattern:
+    level: "%5p [${spring.application.name},%X{requestId:-}]"
+  file:
+    name: ${LOG_DIR:.runtime/logs}/${spring.application.name}.log
+

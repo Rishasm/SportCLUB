@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:${SPORTCLUB_DB_PORT:5432}/sportclub_test?currentSchema=${sportclub.test.schema}
+    username: ${SPORTCLUB_DB_USER:sportclub_app}
+    password: ${SPORTCLUB_DB_PASSWORD}
+  flyway:
+    default-schema: ${sportclub.test.schema}
+  application:
+    name: workouts-service
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate

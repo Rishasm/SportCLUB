@@ -1,0 +1,15 @@
+server:
+  port: ${SERVER_PORT:8083}
+sportclub:
+  database: sportclub_workouts
+  service-title: Тренировки
+  api-prefix: /api/workouts
+spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+springdoc:
+  api-docs:
+    path: /api/workouts/v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

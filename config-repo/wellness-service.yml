@@ -1,0 +1,15 @@
+server:
+  port: ${SERVER_PORT:8084}
+sportclub:
+  database: sportclub_wellness
+  service-title: Личные показатели
+  api-prefix: /api/wellness
+spring:
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+springdoc:
+  api-docs:
+    path: /api/wellness/v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

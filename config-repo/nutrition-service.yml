@@ -1,0 +1,11 @@
+server:
+  port: ${SERVER_PORT:8085}
+sportclub:
+  service-title: Дневник питания
+  api-prefix: /api/nutrition
+spring:
+  flyway:
+    default-schema: nutrition
+springdoc:
+  api-docs:
+    path: /api/nutrition/v3/api-docs

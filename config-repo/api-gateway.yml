@@ -1,0 +1,91 @@
+server:
+  port: ${SERVER_PORT:8080}
+spring:
+  cloud:
+    gateway:
+      server:
+        webflux:
+          default-filters:
+            - name: DedupeResponseHeader
+              args:
+                name: X-Request-ID
+                strategy: RETAIN_FIRST
+          httpclient:
+            connect-timeout: 2000
+            response-timeout: 5s
+          routes:
+            - id: members
+              uri: lb://members-service
+              predicates:
+                - Path=/api/members/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: members
+                    fallbackUri: forward:/fallback/members
+                    statusCodes: [500, 502, 503, 504]
+            - id: club
+              uri: lb://club-service
+              predicates:
+                - Path=/api/club/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: club
+                    fallbackUri: forward:/fallback/club
+                    statusCodes: [500, 502, 503, 504]
+            - id: workouts
+              uri: lb://workouts-service
+              predicates:
+                - Path=/api/workouts/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: workouts
+                    fallbackUri: forward:/fallback/workouts
+                    statusCodes: [500, 502, 503, 504]
+            - id: wellness
+              uri: lb://wellness-service
+              predicates:
+                - Path=/api/wellness/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: wellness
+                    fallbackUri: forward:/fallback/wellness
+                    statusCodes: [500, 502, 503, 504]
+            - id: nutrition
+              uri: lb://nutrition-service
+              predicates:
+                - Path=/api/nutrition/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: nutrition
+                    fallbackUri: forward:/fallback/nutrition
+                    statusCodes: [500, 502, 503, 504]
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 2
+    instances:
+      members:
+        base-config: default
+      club:
+        base-config: default
+      workouts:
+        base-config: default
+      wellness:
+        base-config: default
+      nutrition:
+        base-config: default
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 6s
+

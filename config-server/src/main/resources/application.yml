@@ -1,0 +1,25 @@
+server:
+  port: ${SERVER_PORT:8888}
+  address: ${SERVER_ADDRESS:127.0.0.1}
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: ${CONFIG_REPO_LOCATION:classpath:/central-config/}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: never
+logging:
+  file:
+    name: ${LOG_DIR:.runtime/logs}/config-server.log
+

@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:${SPORTCLUB_DB_PORT:5432}/${sportclub.database}
+    username: ${SPORTCLUB_DB_USER:sportclub_app}
+    password: ${SPORTCLUB_DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 3
+      minimum-idle: 1
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+sportclub:
+  demo:
+    enabled: true
+
