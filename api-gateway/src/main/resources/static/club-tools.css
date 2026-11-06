@@ -35,4 +35,5 @@
 @keyframes payment-confirm { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .exercise-animation { display: grid; place-items: center; gap: .75rem; }
 .exercise-animation svg { width: min(100%, 15rem); height: auto; }
+.exercise-video { width: 100%; max-height: 22rem; border-radius: .75rem; background: #10130f; }
 @media (prefers-reduced-motion: reduce) { .notice.is-payment-success::before { animation: none; } }

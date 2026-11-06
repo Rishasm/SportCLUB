@@ -192,10 +192,20 @@ window.SportClubTools = function ({ api, element, button, link, notify, errorSta
                 element('p', 'tag', item.cancelled ? 'Отменено' : `${levels[item.level]} · ${duration} мин · ${slot.availableSpots} мест`),
                 element('p', '', `${formattedDate(slot.startsAt)} · ${time(slot.startsAt)} · ${slot.room}`),
                 element('p', '', item.description || 'Тренер уточнит план занятия перед началом.'), coach);
-            if (item.technique || item.squatDemo) {
+            const videoSource = window.SportClubPhotos.exerciseVideos?.[slot.id];
+            if (item.technique || item.squatDemo || videoSource) {
                 target.append(element('h3', '', 'Техника упражнений'));
                 if (item.technique) target.append(element('p', '', item.technique));
                 if (item.squatDemo) target.append(squatAnimation());
+                if (videoSource) {
+                    const video = element('video', 'exercise-video');
+                    video.controls = true;
+                    video.playsInline = true;
+                    video.preload = 'none';
+                    video.setAttribute('aria-label', 'Видео техники упражнения');
+                    video.src = videoSource;
+                    target.append(video);
+                }
             }
         } catch (error) {
             if (request === dialogRequest && dialog.open) errorState(target, error, () => openClass(id));
@@ -506,6 +516,7 @@ window.SportClubTools = function ({ api, element, button, link, notify, errorSta
     }
 
     $('#close-class-dialog').addEventListener('click', () => $('#class-dialog').close());
+    $('#class-dialog').addEventListener('close', event => event.currentTarget.querySelector('video')?.pause());
     $('#staff-date').addEventListener('change', () => staff());
     $('#nutrition-date').addEventListener('change', event => {
         if (event.target.value && event.target.reportValidity()) nutrition();

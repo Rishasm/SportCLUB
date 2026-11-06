@@ -1,6 +1,6 @@
 'use strict';
 
-// Relative paths to photos placed in the static/media directory.
+// Paths to media placed in the static/media directory.
 window.SportClubPhotos = {
     gym: {
         // 'gym-strength': '/media/gym-strength.jpg',
@@ -9,4 +9,5 @@ window.SportClubPhotos = {
     },
     classes: {},  // Class UUID → '/media/example.jpg'
     trainers: {}, // Trainer UUID → '/media/example.jpg'
+    exerciseVideos: {}, // Class UUID → '/media/example.mp4'
 };
