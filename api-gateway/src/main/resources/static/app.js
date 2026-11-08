@@ -3,7 +3,7 @@
     const $ = selector => document.querySelector(selector);
     const $$ = selector => Array.from(document.querySelectorAll(selector));
     const state = { token: null, user: null, page: 'home', authMode: 'login', returnTo: 'account', date: dateInMoscow(), type: 'ALL', plans: [], selectedPlan: null, scheduleGeneration: 0, cabinetGeneration: 0 };
-    try { state.token = sessionStorage.getItem('sportclub.token'); } catch { /* Memory-only session if storage is disabled. */ }
+    try { state.token = sessionStorage.getItem('sportclub.token'); } catch { }
     let userPromise = null;
     let authBusy = false;
     let planBusy = false;
@@ -57,7 +57,7 @@
     function clearNotice() { $('#notice').hidden = true; }
     function setToken(token) {
         state.token = token;
-        try { if (token) sessionStorage.setItem('sportclub.token', token); else sessionStorage.removeItem('sportclub.token'); } catch { /* Session stays in memory. */ }
+        try { if (token) sessionStorage.setItem('sportclub.token', token); else sessionStorage.removeItem('sportclub.token'); } catch { }
     }
     function clearSession() {
         setToken(null); state.user = null; userPromise = null;
@@ -217,7 +217,7 @@
             if (pending === paymentId && card.linked && $('#plan-dialog').open) {
                 $('#payment-card-hint').textContent = 'Тестовая карта •••• 4242 уже сохранена.';
             }
-        }).catch(() => { /* Checkout can continue without the saved-card hint. */ });
+        }).catch(() => { });
     }
     function renderPaymentMethod() {
         const card = $('#payment-method').value === 'CARD';

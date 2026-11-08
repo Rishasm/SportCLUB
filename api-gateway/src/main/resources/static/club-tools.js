@@ -192,7 +192,8 @@ window.SportClubTools = function ({ api, element, button, link, notify, errorSta
                 element('p', 'tag', item.cancelled ? 'Отменено' : `${levels[item.level]} · ${duration} мин · ${slot.availableSpots} мест`),
                 element('p', '', `${formattedDate(slot.startsAt)} · ${time(slot.startsAt)} · ${slot.room}`),
                 element('p', '', item.description || 'Тренер уточнит план занятия перед началом.'), coach);
-            const videoSource = window.SportClubPhotos.exerciseVideos?.[slot.id];
+            const videoSource = window.SportClubPhotos.exerciseVideos?.[slot.id]
+                ?? window.SportClubPhotos.exerciseVideosByType?.[slot.type];
             if (item.technique || item.squatDemo || videoSource) {
                 target.append(element('h3', '', 'Техника упражнений'));
                 if (item.technique) target.append(element('p', '', item.technique));

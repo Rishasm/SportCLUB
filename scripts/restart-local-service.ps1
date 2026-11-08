@@ -27,7 +27,6 @@ if ([int]$target.port -ne $servicePort -or [int]$target.processId -le 0) {
     throw "Unexpected port or process ID for $Name in the manifest."
 }
 
-# Check prerequisites before stopping a working service.
 foreach ($port in @(8888, 8761)) {
     try {
         $healthBody = Invoke-RestMethod -Uri "http://localhost:$port/actuator/health" -TimeoutSec 5

@@ -91,7 +91,6 @@ public class WorkoutService {
     public Session start(UUID memberId, UUID programId) {
         ensureMemberLock(memberId);
         return transactions.execute(transaction -> {
-            // Serialize starts per member, including starts on different programs.
             memberLocks.findForUpdate(memberId).orElseThrow();
             if (sessions.existsByMemberIdAndStatus(memberId, ACTIVE)) {
                 throw conflict("ACTIVE_WORKOUT_EXISTS", "Сначала заверши или отмени текущую тренировку.");
@@ -170,7 +169,6 @@ public class WorkoutService {
     private void ensureMemberLock(UUID memberId) {
         if (memberLocks.existsById(memberId)) return;
         try {
-            // Repository save commits before the transaction that locks and starts a session.
             memberLocks.saveAndFlush(new WorkoutMemberLock(memberId));
         } catch (DataIntegrityViolationException exception) {
             if (!memberLocks.existsById(memberId)) throw exception;

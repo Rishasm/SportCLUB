@@ -87,7 +87,6 @@ window.SportClubWellness = function (host) {
             state.busy = false;
             if (state.visible) {
                 controls();
-                // A quick return during a save can have loaded the pre-save value.
                 if (token === getToken() && generation !== state.generation) await load();
             }
         }

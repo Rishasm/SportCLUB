@@ -251,7 +251,6 @@ public class ClubService {
     }
 
     public Booking book(UUID memberId, String memberName, String bearerToken, UUID classId) {
-        // Check membership before locking a local row, so the network call holds no database lock.
         membership.requireActiveMembership(memberId, bearerToken);
         return transactions.execute(transaction -> {
             ClubClass clubClass = classes.findByIdForUpdate(classId)
@@ -284,7 +283,6 @@ public class ClubService {
     public void cancel(UUID memberId, UUID bookingId) {
         UUID classId = bookings.findOwnedClassId(bookingId, memberId)
                 .orElseThrow(() -> notFound("Запись не найдена."));
-        // Bookings and cancellations serialize on the same class row.
         classes.findByIdForUpdate(classId).orElseThrow(() -> notFound("Занятие не найдено."));
         bookings.findByIdAndMemberId(bookingId, memberId)
                 .orElseThrow(() -> notFound("Запись не найдена.")).cancel();

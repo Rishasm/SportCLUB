@@ -117,7 +117,6 @@ class MembersApplicationTest {
         Profile own = profile(first.token()).getBody();
         assertThat(own.id()).isEqualTo(first.user().id()).isNotEqualTo(second.user().id());
         assertThat(own.membership()).isNull();
-        // Supplying another member id cannot change the authenticated identity.
         var injected = http.exchange("/api/members/me?memberId=" + second.user().id(), HttpMethod.GET,
                 authorized(first.token(), null), Profile.class);
         assertThat(injected.getBody().id()).isEqualTo(first.user().id());

@@ -67,7 +67,6 @@ try {
         $processes.Add(@{ name = $app.Name; processId = $process.Id; jarPath = $jar; port = $app.Port })
         ConvertTo-Json -InputObject @($processes.ToArray()) -Depth 4 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
         Write-Host "Started $($app.Name) (PID $($process.Id), port $($app.Port))."
-        # Start sequentially to avoid competing JPA initializations on a local machine.
         $healthPath = if ($app.Name -eq 'config-server') { 'health' } else { 'health/readiness' }
         Wait-SportClubHttp -Url "http://localhost:$($app.Port)/actuator/$healthPath" -TimeoutSeconds 180
         Write-Host "$($app.Name) is ready."

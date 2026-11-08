@@ -2,8 +2,6 @@
 $manifestPath = Join-Path $script:RuntimeRoot 'processes.json'
 if (-not (Test-Path -LiteralPath $manifestPath)) { Write-Host 'No managed SportCLUB processes.'; return }
 $parsedEntries = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
-# Windows PowerShell 5.1 emits a JSON array as one pipeline object.
-# Enumerate the assigned value so each entry is checked separately.
 $entries = @($parsedEntries | Where-Object { $null -ne $_ })
 [array]::Reverse($entries)
 foreach ($entry in $entries) {

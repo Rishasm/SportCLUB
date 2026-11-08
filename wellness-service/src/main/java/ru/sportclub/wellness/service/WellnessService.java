@@ -173,7 +173,6 @@ public class WellnessService {
     private <T> T locked(UUID memberId, Function<WellnessMemberSettings, T> action) {
         ensureSettings(memberId);
         return transactions.execute(transaction -> {
-            // Serialize diary writes per member so simultaneous updates preserve the daily limit.
             WellnessMemberSettings memberSettings = settings.findForUpdate(memberId).orElseThrow();
             return action.apply(memberSettings);
         });
@@ -182,7 +181,6 @@ public class WellnessService {
     private void ensureSettings(UUID memberId) {
         if (settings.existsById(memberId)) return;
         try {
-            // Insert defaults in a separate transaction. A concurrent insert must not reset the saved goal.
             settings.insertDefaults(memberId);
         } catch (DataIntegrityViolationException exception) {
             if (!settings.existsById(memberId)) throw exception;

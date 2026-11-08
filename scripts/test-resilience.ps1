@@ -63,7 +63,6 @@ try {
     foreach ($name in ($independentRoutes + 'wellness')) {
         Assert-ResilienceStatus (Invoke-ResilienceApi "/api/$name/system") 200 "Initial $name route"
     }
-    # Two successful probes also allow an existing HALF_OPEN circuit to close.
     Assert-ResilienceStatus (Invoke-ResilienceApi '/api/wellness/system') 200 'Initial wellness probe'
     if ((Get-ResilienceMetric 'resilience4j.circuitbreaker.state' 'wellness' 'closed') -ne 1) { throw 'Wellness Circuit Breaker must start CLOSED.' }
     $notPermittedBefore = Get-ResilienceMetric 'resilience4j.circuitbreaker.not.permitted.calls'
