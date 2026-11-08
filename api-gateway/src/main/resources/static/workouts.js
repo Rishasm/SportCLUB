@@ -63,14 +63,75 @@ window.SportClubWorkouts = function (host) {
             card.append(exercises, actions); return card;
         }));
     }
+    const exercisePoses = {
+        'goblet-squat': [89, 31, 'M87 43L74 70l29 1-9 26m-20-27 14 27m-1-54 12 12 8-8'],
+        'dumbbell-bench': [56, 66, 'M68 67h42l15 29m-15-29 7 28m-40-28V38m-10 0h20M45 76h74'],
+        'lat-pulldown': [84, 40, 'M84 51v25l20 1v20m-20-46-19-8-5-22m24 30 18-8 5-22M57 21h53'],
+        'romanian-deadlift': [120, 51, 'M108 52L78 66l6 31m-6-31-4 31m30-42v32m-14 0h29'],
+        'lateral-raise': [84, 31, 'M84 42v31L72 97m12-24 12 24M84 47H48m36 0h36m-72-5v10m72-10v10'],
+        'seated-row': [67, 44, 'M68 56l-5 25h36l26 16M68 56l15 13 21-8m0 0h27M53 86h24'],
+        'leg-press': [53, 68, 'M62 73l17 13 19-26 23-13m-42 39 24-18 22-13m-11-18 19 23M43 77l36 17'],
+        'dumbbell-shoulder-press': [83, 38, 'M83 49v32h26v16M83 51l-16-9V23m16 28 16-9V23M58 23h18m14 0h18M73 85h23'],
+        'biceps-curl': [82, 32, 'M82 44v30L73 97m9-23 10 23M82 48l8 22 15-15m-7 0h14'],
+        'triceps-pushdown': [79, 33, 'M82 45l-5 29-6 23m6-23 12 23M82 47l11 15 5 18m-8 0h16M98 80V19'],
+        'bodyweight-lunge': [81, 32, 'M81 44l4 27 27 2v24M85 71L65 91l-17 6m34-51 9 16'],
+        'push-up': [111, 47, 'M104 57L78 68 43 87l-10 10m64-37 14 17v20'],
+        'hip-thrust': [52, 66, 'M62 70l31-9 22 7 9 29M62 70l14 12M42 80h35'],
+        'crunch': [57, 57, 'M65 65l26 26 21-22 15 28M66 68l12 4 14-8'],
+        'calf-raise': [85, 29, 'M85 41v32l-1 14 10 10h11m-20-54 13 19M76 97h35'],
+    };
+
+    function exerciseFigure(id) {
+        const [x, y, pose] = exercisePoses[id];
+        const ns = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('class', 'exercise-figure');
+        svg.setAttribute('viewBox', '0 0 168 112');
+        svg.setAttribute('aria-hidden', 'true');
+        const floor = document.createElementNS(ns, 'path');
+        floor.setAttribute('d', 'M25 99h118');
+        floor.setAttribute('stroke', '#53664e');
+        const body = document.createElementNS(ns, 'path');
+        body.setAttribute('d', pose);
+        body.setAttribute('fill', 'none');
+        body.setAttribute('stroke', '#b5ff7a');
+        body.setAttribute('stroke-width', '4');
+        body.setAttribute('stroke-linecap', 'round');
+        body.setAttribute('stroke-linejoin', 'round');
+        const head = document.createElementNS(ns, 'circle');
+        head.setAttribute('cx', x);
+        head.setAttribute('cy', y);
+        head.setAttribute('r', '8');
+        head.setAttribute('fill', '#d9ebd0');
+        svg.append(floor, body, head);
+        return svg;
+    }
+
+    function catalogVideo(source, title) {
+        const video = element('video', 'exercise-video');
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'metadata';
+        video.src = source;
+        video.setAttribute('aria-label', title);
+        return video;
+    }
+
     function renderCatalog() {
         const target = $('#workout-catalog');
         target.replaceChildren(...state.catalog.map(exercise => {
             const card = element('article', 'exercise-catalog-card');
+            if (exercisePoses[exercise.id]) card.append(exerciseFigure(exercise.id));
             card.append(element('span', 'tag', exercise.muscleGroup), element('h3', '', exercise.name), element('p', '', exercise.description), element('p', 'equipment', exercise.equipment));
+            if (exercise.id === 'push-up') card.append(catalogVideo(window.SportClubPhotos.exerciseVideosByType.STRENGTH, 'Техника отжиманий'));
             return card;
         }));
         if (!state.catalog.length) target.append(emptyState('Каталог пока пуст', 'Упражнения появятся после добавления в клубе.'));
+        else {
+            const stretching = element('article', 'exercise-catalog-card');
+            stretching.append(element('h3', '', 'Растяжка'), catalogVideo(window.SportClubPhotos.exerciseVideosByType.STRETCH, 'Техника растяжки'));
+            target.append(stretching);
+        }
     }
     function renderHistory() {
         const target = $('#workout-history');

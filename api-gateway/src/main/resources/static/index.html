@@ -38,15 +38,17 @@
             </div>
             <div class="club-strip"><span>Будни 07:00–23:00</span><span>Выходные 09:00–22:00</span><span>Силовые · Кардио · Групповые</span></div>
             <div class="section-heading"><div><p class="eyebrow">Пространство для тебя</p><h2>Найди своё движение</h2></div><p class="muted">Разные цели. Одно место.</p></div>
-            <div class="zones"><article class="zone"><span class="zone-number">01</span><h3>Силовая зона</h3><p>Свободные веса и тренажёры для работы над твоей силой.</p></article><article class="zone"><span class="zone-number">02</span><h3>Кардио</h3><p>Беговые дорожки и велосипеды. Дистанция — твоя.</p></article><article class="zone"><span class="zone-number">03</span><h3>Вместе сильнее</h3><p>Функциональные занятия и растяжка с поддержкой тренера.</p></article></div>
-            <div class="club-photo-grid" aria-label="Фотографии клуба"><div class="photo-slot" data-photo="gym-strength">Фото силовой зоны</div><div class="photo-slot" data-photo="gym-cardio">Фото кардиозоны</div><div class="photo-slot" data-photo="gym-studio">Фото студии</div></div>
+            <div class="zones">
+                <article class="zone"><span class="zone-number">01</span><h3>Силовая зона</h3><p>Свободные веса и тренажёры для работы над твоей силой.</p><div class="photo-slot" data-photo="gym-strength">Фото силовой зоны</div></article>
+                <article class="zone"><span class="zone-number">02</span><h3>Кардио</h3><p>Беговые дорожки и велосипеды. Дистанция — твоя.</p><div class="photo-slot" data-photo="gym-cardio">Фото кардиозоны</div></article>
+                <article class="zone"><span class="zone-number">03</span><h3>Вместе сильнее</h3><p>Функциональные занятия и растяжка с поддержкой тренера.</p><div class="photo-slot" data-photo="gym-studio">Фото студии</div></article>
+            </div>
             <div class="section-heading"><div><p class="eyebrow">Знакомься с командой</p><h2>Тренеры, которые рядом</h2></div><a href="#schedule" class="text-link">К расписанию <span aria-hidden="true">→</span></a></div>
             <div id="trainers" class="trainers-grid" aria-live="polite"><p class="muted">Загружаем тренеров…</p></div>
             <div class="home-callout"><div><h2>Твоя следующая тренировка<br>начинается с одного решения.</h2><p class="muted">Оформи абонемент и забронируй удобное время.</p></div><a href="#plans" class="button button-primary">Выбрать абонемент <span aria-hidden="true">↗</span></a></div>
         </section>
         <section data-page="plans" aria-label="Абонементы" hidden>
             <div class="page-heading"><p class="eyebrow">Начни в своём темпе</p><h1>Твой ритм.<br>Твой абонемент.</h1><p class="muted">Выбери доступ, который подходит твоим тренировкам.</p></div>
-            <p class="demo-note">Учебная оплата с тестовой картой или СБП. Реальных списаний нет.</p>
             <div id="plans-list" class="plans-grid" aria-live="polite"><p class="muted">Загружаем абонементы…</p></div>
         </section>
         <section data-page="schedule" aria-label="Расписание занятий" hidden>
@@ -100,14 +102,34 @@
             <div class="auth-layout"><div class="auth-intro"><p class="eyebrow">Твоё место становиться сильнее</p><h1>Всё начинается<br>с тебя.</h1><p class="muted">Войди, чтобы оформлять абонементы,<br>записываться на занятия и управлять своими планами.</p><div class="auth-decoration" aria-hidden="true">S<span>C</span></div></div>
             <div class="auth-panel"><div class="auth-tabs" role="group" aria-label="Вход или регистрация"><button type="button" data-auth-mode="login" aria-pressed="true">Войти</button><button type="button" data-auth-mode="register" aria-pressed="false">Создать аккаунт</button></div><h2 id="auth-title">С возвращением</h2><p id="auth-context" class="muted">Введи почту и пароль своего аккаунта.</p>
                 <form id="auth-form"><label id="name-field" hidden>Имя<input id="auth-name" name="name" autocomplete="given-name" minlength="2" maxlength="80" placeholder="Как к тебе обращаться"></label><label>Электронная почта<input id="auth-email" name="email" type="email" autocomplete="username" maxlength="254" placeholder="you@example.com" required></label><label>Пароль<input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="8" maxlength="72" placeholder="Не менее 8 символов" required></label><p id="auth-error" class="form-error" role="alert" hidden></p><button id="auth-submit" type="submit" class="button button-primary button-full">Войти <span aria-hidden="true">→</span></button></form>
-                <div class="demo-account"><span class="eyebrow">Демонстрационный аккаунт</span><p>demo@sportclub.local<br><code>SportClub123!</code></p><button type="button" id="fill-demo" class="text-button">Подставить данные для входа →</button></div>
             </div></div>
         </section>
     </main>
     <footer class="site-footer wrap"><a href="#home" class="brand">Sport<span>CLUB</span></a><a class="text-link" href="#help">Помощь и FAQ ↗</a><span>© <span id="year"></span> SportCLUB</span></footer>
     <nav class="mobile-nav" aria-label="Навигация на телефоне"><a href="#home" data-nav="home"><span aria-hidden="true">⌂</span>Клуб</a><a href="#schedule" data-nav="schedule"><span aria-hidden="true">▦</span>Расписание</a><a href="#plans" data-nav="plans"><span aria-hidden="true">◇</span>Абонементы</a><a href="#workouts" data-nav="workouts"><span aria-hidden="true">↗</span>Тренировки</a><a href="#wellness" data-nav="wellness"><span aria-hidden="true">◔</span>Показатели</a><a href="#account" data-nav="account"><span aria-hidden="true">○</span>Кабинет</a></nav>
     <dialog id="program-dialog" aria-labelledby="program-dialog-title"><div class="dialog-heading"><p class="eyebrow">Твоя программа</p><button type="button" id="close-program-dialog" class="close-button" aria-label="Закрыть">×</button></div><h2 id="program-dialog-title">Собери тренировку</h2><p class="muted">От одного до двенадцати упражнений в удобном порядке.</p><form id="program-form"><label>Название<input id="program-name" name="name" minlength="2" maxlength="100" placeholder="Например, мой силовой день" required></label><label>Описание<textarea id="program-description" name="description" maxlength="500" rows="2" placeholder="На чём хочешь сосредоточиться"></textarea></label><div id="program-exercises"></div><button type="button" id="add-program-exercise" class="text-button">Добавить упражнение +</button><p id="program-error" class="form-error" role="alert" hidden></p><button type="submit" id="save-program" class="button button-primary">Сохранить программу</button></form></dialog>
-    <dialog id="plan-dialog" aria-labelledby="plan-dialog-title"><div class="dialog-heading"><p class="eyebrow">Оформление абонемента</p><button type="button" id="close-plan-dialog" class="close-button" aria-label="Закрыть">×</button></div><h2 id="plan-dialog-title"></h2><p id="plan-dialog-description" class="muted"></p><p class="demo-note">Учебный платёж. Реальных списаний нет.</p><label for="payment-method">Способ оплаты</label><select id="payment-method"><option value="CARD">Тестовая карта •••• 4242</option><option value="SBP">СБП (демо)</option></select><label class="card-opt"><input type="checkbox" id="payment-link-card"> Сохранить тестовую карту</label><p id="payment-card-hint" class="muted"></p><p id="plan-error" class="form-error" role="alert" hidden></p><div class="actions"><button type="button" id="confirm-plan" class="button button-primary">Подтвердить оплату</button><button type="button" id="dismiss-plan" class="button button-outline">Пока не нужно</button></div></dialog>
+    <dialog id="plan-dialog" class="checkout" aria-labelledby="plan-dialog-title">
+        <div class="dialog-heading"><p class="eyebrow">Абонемент SportCLUB</p><button type="button" id="close-plan-dialog" class="close-button" aria-label="Закрыть">×</button></div>
+        <h2 id="plan-dialog-title"></h2>
+        <p id="plan-dialog-description" class="muted"></p>
+        <form id="checkout-form" class="club-form" autocomplete="off">
+            <label for="payment-method">Способ оплаты</label>
+            <select id="payment-method"><option value="CARD">Банковская карта</option><option value="SBP">СБП</option></select>
+            <fieldset id="payment-fields" class="payment-fields">
+                <legend class="eyebrow">Реквизиты карты</legend>
+                <label>Номер карты<input id="card-number" type="text" inputmode="numeric" placeholder="0000 0000 0000 0000" maxlength="23" required></label>
+                <label>Имя на карте<input id="card-holder" type="text" placeholder="Имя Фамилия" maxlength="80" required></label>
+                <div class="card-fields-row">
+                    <label>Срок действия<input id="card-expiry" type="text" inputmode="numeric" placeholder="ММ/ГГ" maxlength="5" required></label>
+                    <label>Код безопасности<input id="card-code" type="password" inputmode="numeric" placeholder="•••" maxlength="4" required></label>
+                </div>
+                <label class="card-opt"><input type="checkbox" id="payment-link-card"> Запомнить способ оплаты</label>
+            </fieldset>
+            <p class="muted checkout-privacy">Реквизиты остаются в этом окне. Списаний нет.</p>
+            <p id="plan-error" class="form-error" role="alert" hidden></p>
+            <div class="actions"><button type="submit" id="confirm-plan" class="button button-primary">Подтвердить</button><button type="button" id="dismiss-plan" class="button button-outline">Отмена</button></div>
+        </form>
+    </dialog>
     <dialog id="class-dialog" aria-labelledby="class-dialog-title"><div class="dialog-heading"><p class="eyebrow">Занятие</p><button type="button" id="close-class-dialog" class="close-button" aria-label="Закрыть">×</button></div><h2 id="class-dialog-title">Занятие</h2><div id="class-dialog-content" class="club-stack"></div></dialog>
     <noscript><p class="wrap">Для входа, просмотра расписания и записи на занятия включи JavaScript в браузере.</p></noscript>
 </body>

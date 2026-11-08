@@ -187,7 +187,9 @@ window.SportClubTools = function ({ api, element, button, link, notify, errorSta
             const bio = element('div', 'club-stack');
             bio.append(element('h3', '', item.trainer.name), element('p', 'muted', item.trainer.specialty),
                 element('p', '', item.trainer.bio));
-            coach.append(photo('Фото тренера', window.SportClubPhotos.trainers[item.trainer.id]), bio);
+            const portrait = window.SportClubPhotos.trainers[item.trainer.id]
+                ?? window.SportClubPhotos.trainerPortraits[item.trainer.name];
+            coach.append(photo('Фото тренера', portrait), bio);
             target.replaceChildren(photo('Фото занятия', window.SportClubPhotos.classes[slot.id]),
                 element('p', 'tag', item.cancelled ? 'Отменено' : `${levels[item.level]} · ${duration} мин · ${slot.availableSpots} мест`),
                 element('p', '', `${formattedDate(slot.startsAt)} · ${time(slot.startsAt)} · ${slot.room}`),
@@ -243,19 +245,23 @@ window.SportClubTools = function ({ api, element, button, link, notify, errorSta
             notify('Пароль обновлён.');
         });
         password.append(passwordForm);
-        const card = panel('Тестовая карта');
+        const card = panel('Способ оплаты', 'saved-payment');
         const cardContent = element('div', 'club-stack');
         card.append(cardContent);
         target.replaceChildren(profile, password, card);
         async function showCard() {
             try {
                 const { linked } = await api('/api/members/me/payment-card');
-                const change = button(linked ? 'Отвязать карту' : 'Привязать тестовую карту', 'button button-outline', async () => {
+                const change = button(linked ? 'Удалить сохранённый способ' : 'Запомнить оплату картой', 'button button-outline', async () => {
                     change.disabled = true;
                     try { await write('/api/members/me/payment-card', linked ? 'DELETE' : 'PUT'); await showCard(); }
                     catch (error) { notify(error.message, true); change.disabled = false; }
                 });
-                cardContent.replaceChildren(element('p', 'muted', linked ? 'Привязана тестовая карта •••• 4242.' : 'Тестовая карта пока не привязана.'), change);
+                const illustration = element('img', 'saved-card-art');
+                illustration.src = '/media/payment-card.svg';
+                illustration.alt = '';
+                cardContent.replaceChildren(illustration,
+                    element('p', 'muted', linked ? 'Оплата картой сохранена как способ.' : 'Способ оплаты ещё не выбран.'), change);
             } catch (error) { errorState(cardContent, error, showCard); }
         }
         await showCard();
@@ -472,7 +478,7 @@ window.SportClubTools = function ({ api, element, button, link, notify, errorSta
             ['Как записаться?', 'Войди, оформи абонемент и нажми «Записаться» рядом с нужным занятием.'],
             ['Как отменить запись?', 'Открой «Мой кабинет» и нажми «Отменить запись» рядом с будущим занятием.'],
             ['Где узнать об изменениях?', 'Открой «Уведомления» в личном кабинете. Там появятся сообщения об отмене и переносе.'],
-            ['С карты спишут деньги?', 'Оплата в SportCLUB учебная. В форме используются только тестовая карта и имитация СБП.']
+            ['Где хранятся реквизиты карты?', 'Реквизиты остаются в окне оформления. Списаний нет.']
         ];
         const faq = panel('Частые вопросы');
         const answers = element('div', 'club-faq');

@@ -164,7 +164,16 @@
             if (!Array.isArray(trainers) || !trainers.length) { target.replaceChildren(emptyState('Знакомство скоро состоится', 'Информация о тренерах пока не добавлена.')); return; }
             target.replaceChildren(...trainers.map(trainer => {
                 const card = element('article', 'trainer');
-                card.append(element('div', 'trainer-avatar', trainer.initials || trainer.name.split(/\s+/).map(part => part[0]).slice(0, 2).join('')),
+                const avatar = element('div', 'trainer-avatar', trainer.initials);
+                const portrait = window.SportClubPhotos.trainerPortraits[trainer.name];
+                if (portrait) {
+                    const img = element('img', 'trainer-portrait');
+                    img.alt = trainer.name;
+                    img.src = portrait;
+                    img.addEventListener('error', () => img.remove(), { once: true });
+                    avatar.append(img);
+                }
+                card.append(avatar,
                     element('h3', '', trainer.name), element('p', 'specialty', trainer.specialty), element('p', '', trainer.bio));
                 return card;
             }));
@@ -208,25 +217,38 @@
         $('#confirm-plan').disabled = false;
         $('#confirm-plan').textContent = 'Подтвердить оплату';
         $('#payment-method').value = 'CARD';
-        $('#payment-link-card').checked = false;
-        $('#payment-card-hint').textContent = '';
+        $('#checkout-form').reset();
         renderPaymentMethod();
         $('#plan-dialog').showModal();
-        const pending = paymentId;
-        api('/api/members/me/payment-card').then(card => {
-            if (pending === paymentId && card.linked && $('#plan-dialog').open) {
-                $('#payment-card-hint').textContent = 'Тестовая карта •••• 4242 уже сохранена.';
-            }
-        }).catch(() => { });
     }
     function renderPaymentMethod() {
         const card = $('#payment-method').value === 'CARD';
-        $('#payment-link-card').parentElement.hidden = !card;
-        $('#payment-card-hint').hidden = !card;
+        $('#payment-fields').hidden = !card;
+        $('#payment-fields').disabled = !card;
     }
-    async function confirmPlan() {
+    function validateCard() {
+        const digits = $('#card-number').value.replace(/[ -]/g, '');
+        const expiry = /^(0[1-9]|1[0-2])\/(\d{2})$/.exec($('#card-expiry').value);
+        const now = new Date();
+        if (!/^\d{13,19}$/.test(digits)) return 'Проверь номер карты.';
+        if ($('#card-holder').value.trim().length < 2) return 'Укажи имя на карте.';
+        if (!expiry || new Date(2000 + Number(expiry[2]), Number(expiry[1]), 1) <= now) return 'Проверь срок действия карты.';
+        if (!/^\d{3,4}$/.test($('#card-code').value)) return 'Укажи код из 3 или 4 цифр.';
+        return null;
+    }
+    async function confirmPlan(event) {
+        event.preventDefault();
         const plan = state.selectedPlan;
         if (!plan || planBusy) return;
+        const method = $('#payment-method').value;
+        const error = method === 'CARD' ? validateCard() : null;
+        if (error) {
+            $('#plan-error').textContent = error;
+            $('#plan-error').hidden = false;
+            return;
+        }
+        const linkCard = method === 'CARD' && $('#payment-link-card').checked;
+        for (const input of $('#payment-fields').querySelectorAll('input:not([type=checkbox])')) input.value = '';
         planBusy = true;
         const submit = $('#confirm-plan');
         submit.disabled = true; submit.textContent = 'Оформляем…';
@@ -234,14 +256,13 @@
         $('#payment-method').disabled = true; $('#payment-link-card').disabled = true;
         $('#plan-error').hidden = true;
         try {
-            const method = $('#payment-method').value;
             await api('/api/members/me/payments', { method: 'POST', body: JSON.stringify({
-                id: paymentId, planId: plan.id, method, linkCard: method === 'CARD' && $('#payment-link-card').checked
+                id: paymentId, planId: plan.id, method, linkCard
             }) });
             await loadUser();
             $('#plan-dialog').close();
             go('account');
-            notify('Учебная оплата прошла. Абонемент активен.');
+            notify('Абонемент активирован. Можно записываться на занятия.');
             $('#notice').classList.add('is-payment-success');
         } catch (error) {
             if (error.status === 401) { $('#plan-dialog').close(); return; }
@@ -343,7 +364,6 @@
             $('#greeting').textContent = `Привет, ${user.name.trim().split(/\s+/)[0]}.`;
             $('#account-date').textContent = formattedDate(new Date(), { weekday: 'long' });
             const layout = element('div', 'account-grid');
-            const left = element('div');
             const membership = element('article', 'membership-card');
             const active = activeMembership(user);
             membership.append(element('p', 'eyebrow', 'Твой доступ в клуб'), element('h2', '', active ? user.membership.planName : 'Начни свой ритм'));
@@ -355,7 +375,7 @@
             } else {
                 membership.append(element('p', '', user.membership ? 'Срок абонемента закончился. Оформи новый, чтобы продолжить занятия.' : 'Абонемента пока нет. Выбери тариф и запишись на первую тренировку.'), link('Выбрать абонемент ↗', 'plans', 'button'));
             }
-            const profile = element('div', 'account-profile');
+            const profile = element('div', 'account-profile panel');
             profile.append(element('h3', '', user.name), element('p', '', user.email));
             const shortcuts = element('div', 'actions');
             shortcuts.append(link('Настройки', 'settings', 'button button-outline'),
@@ -364,13 +384,10 @@
                 shortcuts.append(link(user.role === 'ADMIN' ? 'Управление расписанием' : 'Кабинет тренера', 'staff', 'button button-primary'));
             }
             profile.append(shortcuts);
-            left.append(membership, profile);
             const diary = element('article', 'workout-cabinet-card');
             diary.append(element('p', 'eyebrow', 'Твой тренировочный дневник'), element('h3', '', 'От плана — к результату'), element('p', 'muted', 'Готовые и свои программы, выполненные подходы и история занятий.'), link('Открыть тренировки ↗', 'workouts', 'button button-outline'));
-            left.append(diary);
             const metrics = element('article', 'workout-cabinet-card');
             metrics.append(element('p', 'eyebrow', 'Привычки и самочувствие'), element('h3', '', 'Твой ритм каждый день'), element('p', 'muted', 'Отмечай выпитую воду, записывай сон и следи за весом и ИМТ.'), link('Открыть показатели ↗', 'wellness', 'button button-outline'));
-            left.append(metrics);
             const right = element('article', 'panel');
             const heading = element('div', 'bookings-heading');
             heading.append(element('h2', '', 'Мои занятия'), link('Расписание →', 'schedule', 'text-link'));
@@ -396,7 +413,7 @@
                 }
                 article.append(top, bottom); right.append(article);
             }
-            layout.append(left, right); target.replaceChildren(layout);
+            layout.append(membership, right, profile, diary, metrics); target.replaceChildren(layout);
         } catch (error) { if (generation === state.cabinetGeneration && error.status !== 401) errorState(target, error, loadCabinet); }
     }
     function renderAuth() {
@@ -410,7 +427,6 @@
         $('#auth-context').textContent = registering ? 'Создай аккаунт, чтобы выбрать абонемент и первое занятие.' : 'Введи почту и пароль своего аккаунта.';
         $('#auth-submit').textContent = registering ? 'Создать аккаунт →' : 'Войти →';
         $('#auth-error').hidden = true;
-        $('#fill-demo').disabled = authBusy;
     }
     async function submitAuth(event) {
         event.preventDefault();
@@ -425,7 +441,6 @@
         $('#auth-submit').disabled = true;
         $('#auth-submit').textContent = registering ? 'Создаём аккаунт…' : 'Входим…';
         $$('[data-auth-mode]').forEach(tab => { tab.disabled = true; });
-        $('#fill-demo').disabled = true;
         $('#auth-error').hidden = true;
         try {
             const result = await api('/api/members/auth/' + (registering ? 'register' : 'login'), { method: 'POST', body: JSON.stringify(data), anonymous: true, authAttempt: true });
@@ -442,20 +457,16 @@
         finally {
             authBusy = false; $('#auth-submit').disabled = false;
             $$('[data-auth-mode]').forEach(tab => { tab.disabled = false; });
-            $('#fill-demo').disabled = false;
             $('#auth-submit').textContent = state.authMode === 'register' ? 'Создать аккаунт →' : 'Войти →';
         }
     }
     $('#logout').addEventListener('click', () => { clearSession(); go('home'); notify('Ты вышел из аккаунта.'); });
     $('#auth-form').addEventListener('submit', submitAuth);
     $$('[data-auth-mode]').forEach(tab => tab.addEventListener('click', () => { if (!authBusy) { state.authMode = tab.dataset.authMode; renderAuth(); } }));
-    $('#fill-demo').addEventListener('click', () => {
-        state.authMode = 'login'; renderAuth();
-        $('#auth-email').value = 'demo@sportclub.local'; $('#auth-password').value = 'SportClub123!'; $('#auth-submit').focus();
-    });
     $('#schedule-date').addEventListener('change', event => { if (event.target.value && event.target.reportValidity()) { state.date = event.target.value; loadSchedule(); } });
     $$('[data-type]').forEach(filter => filter.addEventListener('click', () => { state.type = filter.dataset.type; loadSchedule(); }));
-    $('#confirm-plan').addEventListener('click', confirmPlan);
+    $('#checkout-form').addEventListener('submit', confirmPlan);
+    $('#plan-dialog').addEventListener('close', () => $('#checkout-form').reset());
     $('#payment-method').addEventListener('change', renderPaymentMethod);
     ['close-plan-dialog', 'dismiss-plan'].forEach(id => $('#' + id).addEventListener('click', () => { if (!planBusy) $('#plan-dialog').close(); }));
     $('#plan-dialog').addEventListener('cancel', event => { if (planBusy) event.preventDefault(); });

@@ -8,6 +8,11 @@ window.SportClubPhotos = {
     },
     classes: {},
     trainers: {},
+    trainerPortraits: {
+        'Алексей Смирнов': '/media/trainer-alexey.jpg',
+        'Мария Волкова': '/media/trainer-maria.jpg',
+        'Дмитрий Орлов': '/media/trainer-dmitry.jpg',
+    },
     exerciseVideos: {},
     exerciseVideosByType: {
         STRENGTH: '/media/push-up.mp4',
