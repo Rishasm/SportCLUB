@@ -3,3 +3,12 @@
 @media(max-width:900px){.site-header{flex-wrap:wrap;gap:16px}.site-header .desktop-nav{order:3;width:100%;margin-left:0;justify-content:center}.header-account{margin-left:auto}.workout-active-layout{grid-template-columns:1fr}.workout-finish form{grid-template-columns:1fr 1fr}.workout-finish .finish-actions,.workout-finish .form-error{grid-column:1/-1}.workout-catalog{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.workout-programs{grid-template-columns:1fr}.workout-catalog{grid-template-columns:1fr}.workout-program,.workout-exercise,.workout-finish,.workout-session-head,.workout-summary{padding:22px}.workout-history-item{align-items:start;flex-direction:column;gap:16px}.workout-history-item .button{width:100%}.workout-set-head,.workout-set{grid-template-columns:30px minmax(50px,1fr) minmax(50px,1fr) 45px;gap:8px}.workout-set .button{grid-column:2/-1}.workout-set-head span:last-child{display:none}.workout-set-note{align-items:start}.workout-summary .summary-metrics{grid-template-columns:1fr 1fr}.workout-session-head h2{font-size:25px}.workout-finish form{grid-template-columns:1fr}.workout-history-item h3{font-size:20px}.workout-program h2{font-size:24px}.workout-finish h3{font-size:22px}}
 @media(max-width:570px){.mobile-nav{grid-template-columns:repeat(5,minmax(0,1fr))}.mobile-nav a{font-size:10px;min-width:0}.workout-tabs{gap:6px}.workout-tabs button{font-size:12px;padding:10px 14px}.workout-program li{font-size:12px}.workout-program .actions .button{flex-basis:100%}.workout-session-status{font-size:11px}.workout-exercise{padding:18px}.workout-finish{padding:20px}.workout-exercise h3{font-size:19px}.workout-set-head,.workout-set{gap:7px}.workout-summary .summary-metrics{gap:20px 12px}.summary-metric strong{font-size:25px}#program-dialog{padding:22px}.program-exercise-row{padding:14px}.program-row-values{gap:7px}.program-row-values label{font-size:10px}.workout-clock{font-size:30px}.workout-cabinet-card{padding:23px}.workout-history-item{padding:22px}}
+.workout-catalog .exercise-catalog-card { padding: 0; overflow: hidden; }
+.exercise-catalog-content { padding: 1.25rem; }
+.exercise-catalog-media {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: contain;
+    background: #fbfcf8;
+}

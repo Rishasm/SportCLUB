@@ -56,8 +56,6 @@
 #account-content .account-profile .actions { margin-top: .85rem; }
 #account-content .workout-cabinet-card { margin: 0; }
 [data-page="account"] .page-heading h1 { font-size: clamp(2.3rem, 6vw, 4.6rem); }
-.exercise-figure { display: block; width: 100%; max-height: 10rem; border-radius: .7rem; background: #111a12; }
-.exercise-catalog-card .exercise-video { aspect-ratio: 2 / 1; }
 @media (max-width: 650px) {
     #account-content .account-grid { grid-template-columns: minmax(0,1fr); }
 }
